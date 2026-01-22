@@ -42,7 +42,7 @@ export default function MemoList({
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center justify-between gap-2 mb-2">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-2 mb-2">
         <div className="flex items-center gap-2 px-0 py-0 rounded-none bg-transparent border-0 shadow-none">
           <button
             className="focus:outline-none"
@@ -61,7 +61,9 @@ export default function MemoList({
             onClick={() => onToggleSelectAllAction(!allSelected)}
             role="button"
             tabIndex={0}
-            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') onToggleSelectAllAction(!allSelected); }}
+            onKeyDown={e => {
+              if (e.key === 'Enter' || e.key === ' ') onToggleSelectAllAction(!allSelected);
+            }}
             aria-label={allSelected ? '전체 선택 해제' : '전체 선택'}
           >
             전체 선택
@@ -70,7 +72,7 @@ export default function MemoList({
         <select
           value={selectedFolder}
           onChange={e => setSelectedFolder(e.target.value)}
-          className="rounded-lg px-3 py-2 pr-8 border border-primary-200 dark:border-primary-800 bg-white/70 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-400/30 shadow-sm text-sm transition appearance-none"
+          className="rounded-lg px-3 py-2 pr-8 border border-primary-200 dark:border-primary-800 bg-white/70 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-400/30 shadow-sm text-sm transition appearance-none w-full sm:w-auto"
           style={{ backgroundPosition: 'right 0.75rem center' }}
         >
           <option value="">전체 폴더</option>

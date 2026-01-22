@@ -110,22 +110,22 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <div className="mx-auto max-w-2xl w-full px-2 py-6">
+    <div className="min-h-screen bg-[#fbfbfb] flex flex-col dark:bg-[#181c20]">
+      <div className="mx-auto w-full max-w-2xl px-2 sm:px-4 py-4 sm:py-6">
         <div className="rounded-xl shadow-sm border border-surface-borderLight dark:border-surface-borderDark bg-[#f4faff] dark:bg-[#232a33] backdrop-blur-glass overflow-hidden">
           {/* macOS-like toolbar */}
-          <div className="flex items-center gap-3 px-3 py-2 glass-toolbar border-b border-surface-borderLight dark:border-surface-borderDark bg-white/30 dark:bg-white/10 backdrop-blur-glass">
-            <div className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-red-500 inline-block" />
-              <span className="h-2.5 w-2.5 rounded-full bg-yellow-400 inline-block" />
-              <span className="h-2.5 w-2.5 rounded-full bg-green-500 inline-block" />
+          <div className="flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-2 glass-toolbar border-b border-surface-borderLight dark:border-surface-borderDark bg-white/30 dark:bg-white/10 backdrop-blur-glass">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-red-500 inline-block" />
+              <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-yellow-400 inline-block" />
+              <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-green-500 inline-block" />
             </div>
-            <div className="flex-1 flex items-center gap-3 text-gray-500 dark:text-gray-300 ml-3">
+            <div className="flex-1 flex items-center gap-2 sm:gap-3 text-gray-500 dark:text-gray-300 ml-2 sm:ml-3">
               <ArrowLeft className="w-4 h-4 opacity-40" />
               <ArrowRight className="w-4 h-4 opacity-40" />
             </div>
             <button
-              className="ml-auto p-1.5 rounded-full hover:bg-primary-500/10 transition focus:outline-none"
+              className="ml-auto p-1 rounded-full sm:p-1.5 hover:bg-primary-500/10 transition focus:outline-none"
               aria-label="다크/라이트 모드 전환"
               onClick={() => setIsDark(v => !v)}
             >
@@ -136,13 +136,13 @@ export default function Home() {
               )}
             </button>
           </div>
-          <div className="p-4 md:p-5 space-y-4">
+          <div className="p-3 sm:p-5 space-y-3 sm:space-y-4">
             <MemoForm
               onAddAction={handleAdd}
               folders={folders}
               onAddFolderAction={handleAddFolder}
             />
-            <div className="flex items-center gap-0 justify-between">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-0 justify-between">
               <div className="flex items-center bg-surface-glass/70 dark:bg-surface-glassDark/70 border border-primary-100 dark:border-primary-900 rounded-md px-2 py-2 w-full max-w-xs shadow-sm backdrop-blur-glass">
                 <Search className="w-4 h-4 text-gray-400 mr-2" />
                 <input

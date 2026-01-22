@@ -43,12 +43,12 @@ export default function MemoForm({ onAddAction, folders, onAddFolderAction }: Me
   }
 
   return (
-    <div className="grid gap-2 p-4 rounded-xl bg-surface-glass dark:bg-surface-glassDark shadow-sm backdrop-blur-glass border border-surface-borderLight dark:border-surface-borderDark">
-      <div className="flex gap-2 items-center mb-2">
+    <div className="grid gap-2 p-3 sm:p-4 rounded-xl bg-surface-glass dark:bg-surface-glassDark shadow-sm backdrop-blur-glass border border-surface-borderLight dark:border-surface-borderDark">
+      <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center mb-2">
         <select
           value={folder}
           onChange={e => setFolder(e.target.value)}
-          className="rounded-lg px-3 py-2 pr-8 border border-primary-200 dark:border-primary-800 bg-white/70 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-400/30 shadow-sm text-sm transition appearance-none"
+          className="rounded-lg px-3 py-2 pr-8 border border-primary-200 dark:border-primary-800 bg-white/70 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-400/30 shadow-sm text-sm transition appearance-none w-full sm:w-auto"
           style={{ backgroundPosition: 'right 0.75rem center' }}
         >
           <option value="">폴더 선택</option>
@@ -62,7 +62,7 @@ export default function MemoForm({ onAddAction, folders, onAddFolderAction }: Me
           value={newFolder}
           onChange={e => setNewFolder(e.target.value)}
           placeholder="새 폴더명"
-          className={`rounded-lg px-3 py-2 border border-primary-200 dark:border-primary-800 bg-white/70 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-400/30 shadow-sm text-sm transition${
+          className={`rounded-lg px-3 py-2 border border-primary-200 dark:border-primary-800 bg-white/70 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-400/30 shadow-sm text-sm transition w-full sm:w-auto${
             folder ? ' bg-gray-200 dark:bg-neutral-700 cursor-not-allowed' : ''
           }`}
           disabled={!!folder}
@@ -72,13 +72,13 @@ export default function MemoForm({ onAddAction, folders, onAddFolderAction }: Me
         value={title}
         onChange={e => setTitle(e.target.value)}
         placeholder="제목"
-        className="rounded-md px-3 py-2 bg-white/30 dark:bg-white/10 border border-surface-borderLight dark:border-surface-borderDark text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition shadow-sm backdrop-blur-glass text-sm"
+        className="rounded-md px-3 py-2 bg-white/30 dark:bg-white/10 border border-surface-borderLight dark:border-surface-borderDark text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition shadow-sm backdrop-blur-glass text-sm w-full"
       />
       <input
         value={url}
         onChange={e => setUrl(e.target.value)}
         placeholder="링크(URL)"
-        className="rounded-md px-3 py-2 bg-white/30 dark:bg-white/10 border border-surface-borderLight dark:border-surface-borderDark text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition shadow-sm backdrop-blur-glass text-sm"
+        className="rounded-md px-3 py-2 bg-white/30 dark:bg-white/10 border border-surface-borderLight dark:border-surface-borderDark text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition shadow-sm backdrop-blur-glass text-sm w-full"
       />
       <textarea
         value={note}

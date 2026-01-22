@@ -4,15 +4,17 @@ import { useEffect, useMemo, useState } from 'react';
 import MemoForm from './components/MemoForm';
 import MemoList from './components/MemoList';
 import { loadMemos, saveMemos, normalizeUrl, clearMemos } from './components/storage';
-import { toast } from 'sonner';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Sun, Moon, ArrowLeft, ArrowRight, Trash2, Search } from 'lucide-react';
 import { MemoItem } from '@/app/types';
-import { Sun, Moon } from 'lucide-react';
 
 export default function Home() {
   const [items, setItems] = useState<MemoItem[]>([]);
   const [filter, setFilter] = useState('');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isDark, setIsDark] = useState(false);
+  const [folders, setFolders] = useState<string[]>([]);
 
   useEffect(() => {
     setItems(loadMemos());
@@ -28,6 +30,15 @@ export default function Home() {
     else root.classList.remove('dark');
   }, [isDark]);
 
+  useEffect(() => {
+    // items에서 폴더 목록 추출
+    const set = new Set<string>();
+    items.forEach(i => {
+      if (i.folder) set.add(i.folder);
+    });
+    setFolders(Array.from(set));
+  }, [items]);
+
   const filtered = useMemo(() => {
     const q = filter.trim().toLowerCase();
     if (!q) return items;
@@ -36,9 +47,11 @@ export default function Home() {
 
   function handleAdd(item: MemoItem) {
     // normalize/validate URL
-    const rawUrl = item.url ?? '';
+    let rawUrl = item.url ?? '';
     if (rawUrl) {
-      const normalized = normalizeUrl(rawUrl);
+      // 입력값 앞에 https://, http://, // 등이 있으면 제거
+      rawUrl = rawUrl.replace(/^(https?:\/\/|\/\/)/, '');
+      const normalized = normalizeUrl('https://' + rawUrl);
       if (!normalized) {
         toast.error('URL이 올바르지 않습니다');
         return;
@@ -48,6 +61,10 @@ export default function Home() {
     setItems(prev => [item, ...prev]);
     toast.success('저장했어요');
     setSelectedIds(new Set());
+  }
+
+  function handleAddFolder(folder: string) {
+    setFolders(prev => (prev.includes(folder) ? prev : [...prev, folder]));
   }
 
   function removeItem(id: string) {
@@ -93,115 +110,117 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen">
-      <div className={`mx-auto max-w-4xl px-6 py-10`}>
-        <div className="rounded-xl glass overflow-hidden">
+    <div className="min-h-screen bg-white flex flex-col">
+      <div className="mx-auto max-w-2xl w-full px-2 py-6">
+        <div className="rounded-xl shadow-sm border border-surface-borderLight dark:border-surface-borderDark bg-[#f4faff] dark:bg-[#232a33] backdrop-blur-glass overflow-hidden">
           {/* macOS-like toolbar */}
-          <div className="flex items-center gap-3 px-4 py-3 glass-toolbar">
+          <div className="flex items-center gap-3 px-3 py-2 glass-toolbar border-b border-surface-borderLight dark:border-surface-borderDark bg-white/30 dark:bg-white/10 backdrop-blur-glass">
             <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full bg-red-500 inline-block" />
-              <span className="h-3 w-3 rounded-full bg-yellow-400 inline-block" />
-              <span className="h-3 w-3 rounded-full bg-green-500 inline-block" />
+              <span className="h-2.5 w-2.5 rounded-full bg-red-500 inline-block" />
+              <span className="h-2.5 w-2.5 rounded-full bg-yellow-400 inline-block" />
+              <span className="h-2.5 w-2.5 rounded-full bg-green-500 inline-block" />
             </div>
-            <div className="flex items-center gap-3 text-gray-500 dark:text-gray-300">
-              {/* back/forward icons */}
-              <button
-                className="h-7 w-7 flex items-center justify-center rounded hover:bg-black/5 dark:hover:bg-white/10"
-                aria-label="뒤로"
-              >
-                <span className="i-material-symbols-arrow-back-ios-new-rounded text-base" />
-              </button>
-              <button
-                className="h-7 w-7 flex items-center justify-center rounded hover:bg-black/5 dark:hover:bg-white/10"
-                aria-label="앞으로"
-              >
-                <span className="i-material-symbols-arrow-forward-ios-rounded text-base" />
-              </button>
+            <div className="flex-1 flex items-center gap-3 text-gray-500 dark:text-gray-300 ml-3">
+              <ArrowLeft className="w-4 h-4 opacity-40" />
+              <ArrowRight className="w-4 h-4 opacity-40" />
             </div>
-            <div className="flex-1 flex justify-center">
-              <div className="w-[60%] md:w-[70%] lg:w-[60%]">
-                <div className="flex items-center gap-2 rounded-full border border-white/20 dark:border-white/10 bg-white/60 dark:bg-neutral-800/50 backdrop-blur-md px-4 py-1.5 text-sm text-gray-700 dark:text-gray-300">
-                  <span className="truncate">
-                    save-it.local/{' '}
-                    {filter
-                      ? `search?q=${encodeURIComponent(filter)}`
-                      : 'Quick link and memo saver'}
+            <button
+              className="ml-auto p-1.5 rounded-full hover:bg-primary-500/10 transition focus:outline-none"
+              aria-label="다크/라이트 모드 전환"
+              onClick={() => setIsDark(v => !v)}
+            >
+              {isDark ? (
+                <Sun className="w-5 h-5 text-yellow-400" />
+              ) : (
+                <Moon className="w-5 h-5 text-gray-700 dark:text-gray-200" />
+              )}
+            </button>
+          </div>
+          <div className="p-4 md:p-5 space-y-4">
+            <MemoForm
+              onAddAction={handleAdd}
+              folders={folders}
+              onAddFolderAction={handleAddFolder}
+            />
+            <div className="flex items-center gap-0 justify-between">
+              <div className="flex items-center bg-surface-glass/70 dark:bg-surface-glassDark/70 border border-primary-100 dark:border-primary-900 rounded-md px-2 py-2 w-full max-w-xs shadow-sm backdrop-blur-glass">
+                <Search className="w-4 h-4 text-gray-400 mr-2" />
+                <input
+                  value={filter}
+                  onChange={e => setFilter(e.target.value)}
+                  placeholder="검색어를 입력하세요"
+                  className="bg-transparent border-none outline-none focus:ring-0 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 flex-1 text-sm min-w-0"
+                />
+              </div>
+              <div className="flex gap-0">
+                <div className="relative group">
+                  <button
+                    onClick={removeSelected}
+                    disabled={selectedIds.size === 0}
+                    className="px-3 py-1.5 rounded-l-md bg-red-100/80 hover:bg-red-200/90 text-red-700 hover:text-red-900 dark:bg-red-900/40 dark:hover:bg-red-800/60 dark:text-red-200 font-semibold shadow-sm border border-red-200 dark:border-red-900 border-r-0 backdrop-blur-glass transition disabled:opacity-40 disabled:cursor-not-allowed text-sm flex items-center gap-1"
+                    aria-label="선택 삭제"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                  <span className="absolute left-1/2 -translate-x-1/2 top-full mt-1 px-2 py-0.5 rounded bg-gray-800 text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-10">
+                    선택 삭제
+                  </span>
+                </div>
+                <div className="relative group">
+                  <button
+                    onClick={removeAll}
+                    className="px-3 py-1.5 rounded-r-md bg-red-100/80 hover:bg-red-200/90 text-red-700 hover:text-red-900 dark:bg-red-900/40 dark:hover:bg-red-800/60 dark:text-red-200 font-semibold shadow-sm border border-red-200 dark:border-red-900 border-l-0 backdrop-blur-glass transition text-sm flex items-center gap-1"
+                    aria-label="전체 삭제"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                  <span className="absolute left-1/2 -translate-x-1/2 top-full mt-1 px-2 py-0.5 rounded bg-gray-800 text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-10">
+                    전체 삭제
                   </span>
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              {/* dark mode toggle */}
-              <button
-                onClick={() => setIsDark(v => !v)}
-                className="h-8 w-8 flex items-center justify-center rounded-full border border-white/20 dark:border-white/10 bg-white/50 dark:bg-neutral-800/50 backdrop-blur-md text-gray-800 dark:text-gray-200"
-                aria-label="다크 모드 토글"
-                title={isDark ? '라이트 모드' : '다크 모드'}
-              >
-                {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              </button>
-            </div>
+            <MemoList
+              items={filtered}
+              selectedIds={selectedIds}
+              onToggleSelectAction={toggleSelect}
+              onToggleSelectAllAction={toggleSelectAll}
+              onRemoveAction={removeItem}
+            />
           </div>
-
-          {/* content area */}
-          <div className="px-6 py-6">
-            <header className="space-y-1 mb-4">
-              <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                Save It
-              </h1>
-            </header>
-
-            <section className="space-y-4">
-              <MemoForm onAddAction={handleAdd} />
-              <div className="flex flex-col md:flex-row gap-2 md:gap-3">
-                <input
-                  value={filter}
-                  onChange={e => setFilter(e.target.value)}
-                  placeholder="검색"
-                  className="rounded-full px-4 py-2 flex-1 bg-white/80 dark:bg-neutral-800/60 border border-gray-200/70 dark:border-white/10 backdrop-blur-md text-gray-900 dark:text-gray-200 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
-                />
-                <div className="flex gap-2">
-                  <button
-                    onClick={removeSelected}
-                    className="px-4 py-2 rounded-full bg-white/60 dark:bg-neutral-800/50 border border-white/20 dark:border-white/10 backdrop-blur-md text-gray-800 dark:text-gray-200 hover:bg-white/70 dark:hover:bg-neutral-800/60 disabled:opacity-50"
-                    disabled={selectedIds.size === 0}
-                  >
-                    선택 삭제
-                  </button>
-                  <button
-                    onClick={removeAll}
-                    className="px-4 py-2 rounded-full bg-white/60 dark:bg-neutral-800/50 border border-white/20 dark:border-white/10 backdrop-blur-md text-gray-800 dark:text-gray-200 hover:bg-white/70 dark:hover:bg-neutral-800/60"
-                  >
-                    모두 삭제
-                  </button>
-                </div>
-              </div>
-            </section>
-
-            <section className="space-y-3 mt-6">
-              <h2 className="text-2xl md:text-3xl font-semibold text-center text-gray-900 dark:text-gray-100 mb-2">
-                Quick link and memo saver for your browser
-              </h2>
-              <p className="text-center text-sm text-gray-500 dark:text-gray-400 mb-6">
-                Save links, notes, and reminders all in one place.
-              </p>
-              <div className="rounded-lg glass">
-                <div className="p-4">
-                  <MemoList
-                    items={filtered}
-                    selectedIds={selectedIds}
-                    onToggleSelectAction={toggleSelect}
-                    onToggleSelectAllAction={toggleSelectAll}
-                    onRemoveAction={removeItem}
-                  />
-                </div>
-              </div>
-            </section>
-          </div>
-
-          {/* toast removed; Toaster is in layout */}
         </div>
       </div>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={1800}
+        hideProgressBar
+        closeOnClick
+        pauseOnHover
+        draggable
+        toastClassName={opts => {
+          const type = opts && 'type' in opts ? opts.type : undefined;
+          return `rounded-xl px-4 py-2 min-h-0 h-auto text-sm font-semibold flex items-center gap-2 shadow-glass backdrop-blur-glass border
+            ${
+              type === 'success'
+                ? 'bg-green-50/90 border-green-200 text-green-900 dark:bg-green-900/80 dark:border-green-800 dark:text-green-100'
+                : type === 'error'
+                  ? 'bg-red-50/90 border-red-200 text-red-900 dark:bg-red-900/80 dark:border-red-800 dark:text-red-100'
+                  : 'bg-gradient-to-br from-[#e3f0ff]/90 to-[#fafdff]/90 dark:from-[#232a33]/90 dark:to-[#1a222b]/90 border-primary-100 dark:border-primary-900 text-gray-900 dark:text-gray-100'
+            } text-sm font-semibold flex-1`;
+        }}
+        closeButton={({ closeToast }) => (
+          <button
+            onClick={closeToast}
+            className="ml-2 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition"
+            aria-label="닫기"
+          >
+            <span className="text-base">✕</span>
+          </button>
+        )}
+        icon={({ type }) => (
+          <span className="mr-1">{type === 'success' ? '✅' : type === 'error' ? '⚠️' : '💡'}</span>
+        )}
+      />
     </div>
   );
 }

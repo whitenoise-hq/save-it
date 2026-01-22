@@ -1,4 +1,4 @@
-import { MemoItem } from '@/app/types';
+import { MemoItem } from '../../types';
 
 const STORAGE_KEY = 'save-it:memos';
 

@@ -110,7 +110,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fbfbfb] flex flex-col dark:bg-[#181c20]">
+    <div className="min-h-screen bg-[#fbfbfb] dark:bg-[#181c20] flex flex-col">
       <div className="mx-auto w-full max-w-2xl px-2 sm:px-4 py-4 sm:py-6">
         <div className="rounded-xl shadow-sm border border-surface-borderLight dark:border-surface-borderDark bg-[#f4faff] dark:bg-[#232a33] backdrop-blur-glass overflow-hidden">
           {/* macOS-like toolbar */}

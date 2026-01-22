@@ -7,7 +7,7 @@ import { loadMemos, saveMemos, normalizeUrl, clearMemos } from './components/sto
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Sun, Moon, ArrowLeft, ArrowRight, Trash2, Search } from 'lucide-react';
-import { MemoItem } from '@/app/types';
+import { MemoItem } from '../types';
 
 export default function Home() {
   const [items, setItems] = useState<MemoItem[]>([]);

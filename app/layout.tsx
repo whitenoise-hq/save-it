@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import '@/styles/globals.css';
+import { Toaster } from 'sonner';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -15,25 +16,25 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Save It',
   description: 'Save It',
-  openGraph: {
-    title: '',
-    description: '',
-    url: '',
-    siteName: '',
-    locale: 'ko_KR',
-    type: 'website',
-    images: [
-      {
-        url: ``,
-        width: 1200,
-        height: 628,
-        alt: '',
-      },
-    ],
-  },
-  icons: {
-    icon: [{ url: ``, type: 'image/svg+xml' }],
-  },
+  // openGraph: {
+  //   title: '',
+  //   description: '',
+  //   url: '',
+  //   siteName: '',
+  //   locale: 'ko_KR',
+  //   type: 'website',
+  //   images: [
+  //     {
+  //       url: ``,
+  //       width: 1200,
+  //       height: 628,
+  //       alt: '',
+  //     },
+  //   ],
+  // },
+  // icons: {
+  //   icon: [{ url: ``, type: 'image/svg+xml' }],
+  // },
 };
 
 export default function RootLayout({
@@ -43,7 +44,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {children}
+        <Toaster position="bottom-center" richColors closeButton />
+      </body>
     </html>
   );
 }

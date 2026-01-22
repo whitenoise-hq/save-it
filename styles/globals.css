@@ -7,8 +7,26 @@
     --foreground: #171717;
 }
 
+/* light/dark base backgrounds */
 body {
-    background: var(--background);
+    /* soft gradient background */
+    background: linear-gradient(135deg, #f5f7fb 0%, #e9eef8 100%);
     color: var(--foreground);
     font-family: Arial, Helvetica, sans-serif;
+    transition: background-color 200ms ease, color 200ms ease;
+}
+
+/* dark mode background */
+.dark body {
+    background: radial-gradient(1200px 600px at 20% 0%, #111317 0%, #0b0c10 40%, #090a0e 100%);
+    color: #e5e7eb;
+}
+
+/* helpers */
+.glass {
+    @apply backdrop-blur-md bg-white/60 dark:bg-neutral-800/50 border border-gray-200/70 dark:border-white/10 shadow-lg;
+}
+
+.glass-toolbar {
+    @apply backdrop-blur-md bg-white/50 dark:bg-neutral-800/40 border-b border-gray-200/80 dark:border-white/10;
 }

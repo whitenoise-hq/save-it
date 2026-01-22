@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Sun, Moon, ArrowLeft, ArrowRight, Trash2, Search } from 'lucide-react';
 import { MemoItem } from '../types';
+import FloatingLinksButton from './components/FloatingLinksButton';
 
 export default function Home() {
   const [items, setItems] = useState<MemoItem[]>([]);
@@ -221,6 +222,7 @@ export default function Home() {
           <span className="mr-1">{type === 'success' ? '✅' : type === 'error' ? '⚠️' : '💡'}</span>
         )}
       />
+      <FloatingLinksButton />
     </div>
   );
 }
